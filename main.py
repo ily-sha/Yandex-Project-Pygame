@@ -12,6 +12,7 @@ settings_window = False
 start_window = True
 start_of_start_window = False
 PUSH_SHAPE = None
+PUSH_SHAPE_FAST = None
 shape_is_active = False
 upload_shapes = False
 running = True
@@ -100,6 +101,49 @@ while running:
                     coordinate_2 = (0, 5)
                     coordinate_3 = (1, 5)
                     coordinate_4 = (1, 6)
+                board.delete_row()
+        elif event.type == PUSH_SHAPE_FAST:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_s]:
+                stop = board.downward_movement_of_shape(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
+                coordinate_1 = (coordinate_1[0] + 1, coordinate_1[1])
+                coordinate_2 = (coordinate_2[0] + 1, coordinate_2[1])
+                coordinate_3 = (coordinate_3[0] + 1, coordinate_3[1])
+                coordinate_4 = (coordinate_4[0] + 1, coordinate_4[1])
+                if stop:
+                    shape_is_active = False
+                pygame.time.set_timer(PUSH_SHAPE, 500)
+            else:
+                pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_a:
+                data = board.movement_to_left(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
+                movement = data[4]
+                if movement:
+                    coordinate_1 = data[0]
+                    coordinate_2 = data[1]
+                    coordinate_3 = data[2]
+                    coordinate_4 = data[3]
+            elif event.key == pygame.K_d:
+                data = board.movement_to_right(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
+                if data is not None:
+                    coordinate_1 = data[0]
+                    coordinate_2 = data[1]
+                    coordinate_3 = data[2]
+                    coordinate_4 = data[3]
+            elif event.key == pygame.K_s:
+                PUSH_SHAPE_FAST = pygame.USEREVENT + 2
+                stop = board.downward_movement_of_shape(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
+                coordinate_1 = (coordinate_1[0] + 1, coordinate_1[1])
+                coordinate_2 = (coordinate_2[0] + 1, coordinate_2[1])
+                coordinate_3 = (coordinate_3[0] + 1, coordinate_3[1])
+                coordinate_4 = (coordinate_4[0] + 1, coordinate_4[1])
+                if stop:
+                    shape_is_active = False
+                    pygame.time.set_timer(PUSH_SHAPE, 500)
+                else:
+                    pygame.time.set_timer(PUSH_SHAPE_FAST, 150)
+                    pygame.time.set_timer(PUSH_SHAPE, 500)
     if start_window:
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, (100, 255, 100), (16, 16, 480, 608), width=1)
