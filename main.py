@@ -15,6 +15,7 @@ start_window = True
 level = 'easy'
 score = '0'
 start_of_start_window = False
+hotkeys_is_ok = False
 PUSH_SHAPE = None
 PUSH_SHAPE_FAST = None
 shape_is_active = False
@@ -121,7 +122,7 @@ while running:
                 pygame.time.set_timer(PUSH_SHAPE, 500)
             else:
                 pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
-        elif event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN and hotkeys_is_ok:
             if event.key == pygame.K_a:
                 data = board.movement_to_left(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
                 movement = data[4]
@@ -254,9 +255,10 @@ while running:
         if start_of_start_window:
             board = Board(10, 20)
             board.board.append([0] * 10)
-            start_of_start_window = False
             PUSH_SHAPE = pygame.USEREVENT + 1
             pygame.time.set_timer(PUSH_SHAPE, 500)
+            hotkeys_is_ok = True
+            start_of_start_window = False
         board.render(screen)
         board.notice(screen)
     pygame.display.flip()
