@@ -1,5 +1,7 @@
 import pygame
 
+from classes import Board
+
 pygame.init()
 size = width, height = 512, 640
 screen = pygame.display.set_mode(size)
@@ -14,7 +16,8 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if start_window:
                 if button_polygon.collidepoint(event.pos):
-                    pass
+                    start_window = False
+                    game_window = True
     if start_window:
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, (100, 255, 100), (16, 16, 480, 608), width=1)
@@ -71,6 +74,50 @@ while running:
         font = pygame.font.SysFont('staypixelregular', 19)
         text = font.render('play!', 0, (100, 255, 100), (0, 0, 0))
         screen.blit(text, (236, 327))
-        pygame.display.flip()
+    if game_window:
+        screen.fill((0, 0, 0))
+        color = (100, 255, 100)
+        pygame.draw.rect(screen, color, (16, 16, 480, 608), width=1)
+        board = Board(10, 20)
+        board.render(screen)
+
+        # надпись 'score'
+
+        font = pygame.font.SysFont('staypixelregular', 37)
+        text = font.render('score:', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 31))
+
+        # надпись со значением 'score'
+
+        font = pygame.font.SysFont('staypixelregular', 29)
+        text = font.render('aaaaaa', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 76))
+
+        # надпись 'hi-score'
+
+        font = pygame.font.SysFont('staypixelregular', 37)
+        text = font.render('hi-score:', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 115))
+
+        # надпись со значением 'hi - score'
+
+        font = pygame.font.SysFont('staypixelregular', 29)
+        text = font.render('aaaaaa', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 160))
+
+        # надпись 'level'
+
+        font = pygame.font.SysFont('staypixelregular', 37)
+        text = font.render('level:', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 462))
+
+        # надпись со значением 'level'
+
+        font = pygame.font.SysFont('staypixelregular', 29)
+        text = font.render('aaaaaa', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 507))
+    pygame.display.flip()
+    if start_window:
         button_polygon = pygame.draw.polygon(screen, (0, 0, 0), button_polygon)
+
 pygame.quit()
