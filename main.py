@@ -112,6 +112,7 @@ while running:
                 coordinate_4 = (coordinate_4[0] + 1, coordinate_4[1])
                 if stop:
                     shape_is_active = False
+                    pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
                 pygame.time.set_timer(PUSH_SHAPE, 500)
             else:
                 pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
