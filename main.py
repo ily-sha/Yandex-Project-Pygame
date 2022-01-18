@@ -1,5 +1,7 @@
 import pygame
 
+import sqlite3
+
 from classes import Board
 
 from functions import get_shape_type
@@ -10,6 +12,8 @@ screen = pygame.display.set_mode(size)
 game_window = False
 settings_window = False
 start_window = True
+level = 'easy'
+score = '0'
 start_of_start_window = False
 PUSH_SHAPE = None
 PUSH_SHAPE_FAST = None
@@ -36,6 +40,8 @@ while running:
                 if stop:
                     shape_is_active = False
             else:
+                plus_score = board.delete_row()
+                score = str(int(score) + plus_score)
                 shape = get_shape_type()
                 shape_is_active = True
                 if shape == 'I':
@@ -101,7 +107,6 @@ while running:
                     coordinate_2 = (0, 5)
                     coordinate_3 = (1, 5)
                     coordinate_4 = (1, 6)
-                board.delete_row()
         elif event.type == PUSH_SHAPE_FAST:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_s]:
@@ -215,7 +220,7 @@ while running:
         # надпись со значением 'score'
 
         font = pygame.font.SysFont('staypixelregular', 29)
-        text = font.render('aaaaaa', 0, color, (0, 0, 0))
+        text = font.render(score, 0, color, (0, 0, 0))
         screen.blit(text, (296, 76))
 
         # надпись 'hi-score'
@@ -226,8 +231,12 @@ while running:
 
         # надпись со значением 'hi - score'
 
+        con = sqlite3.connect('hi-scores.db')
+        cur = con.cursor()
+        hi_score = str(cur.execute('SELECT easy FROM hi_scores').fetchone()[0])
+
         font = pygame.font.SysFont('staypixelregular', 29)
-        text = font.render('aaaaaa', 0, color, (0, 0, 0))
+        text = font.render(hi_score, 0, color, (0, 0, 0))
         screen.blit(text, (296, 160))
 
         # надпись 'level'
@@ -239,7 +248,7 @@ while running:
         # надпись со значением 'level'
 
         font = pygame.font.SysFont('staypixelregular', 29)
-        text = font.render('aaaaaa', 0, color, (0, 0, 0))
+        text = font.render(level, 0, color, (0, 0, 0))
         screen.blit(text, (296, 507))
 
         if start_of_start_window:
