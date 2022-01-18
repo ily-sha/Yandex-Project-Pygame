@@ -27,12 +27,16 @@ while running:
                     start_of_start_window = True
         elif event.type == PUSH_SHAPE:
             if shape_is_active:
-                pass
+                stop = board.downward_movement_of_shape(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
+                coordinate_1 = (coordinate_1[0] + 1, coordinate_1[1])
+                coordinate_2 = (coordinate_2[0] + 1, coordinate_2[1])
+                coordinate_3 = (coordinate_3[0] + 1, coordinate_3[1])
+                coordinate_4 = (coordinate_4[0] + 1, coordinate_4[1])
+                if stop:
+                    shape_is_active = False
             else:
                 shape = get_shape_type()
-                shape = 'I'
                 shape_is_active = True
-                print(shape)
                 if shape == 'I':
                     board.board[0][4] = 1
                     board.board[1][4] = 1
@@ -42,7 +46,60 @@ while running:
                     coordinate_2 = (1, 4)
                     coordinate_3 = (2, 4)
                     coordinate_4 = (3, 4)
-                upload_shapes = True
+                elif shape == 'J':
+                    board.board[0][4] = 1
+                    board.board[1][4] = 1
+                    board.board[2][4] = 1
+                    board.board[2][3] = 1
+                    coordinate_1 = (0, 4)
+                    coordinate_2 = (1, 4)
+                    coordinate_3 = (2, 4)
+                    coordinate_4 = (2, 3)
+                elif shape == 'L':
+                    board.board[0][4] = 1
+                    board.board[1][4] = 1
+                    board.board[2][4] = 1
+                    board.board[2][5] = 1
+                    coordinate_1 = (0, 4)
+                    coordinate_2 = (1, 4)
+                    coordinate_3 = (2, 4)
+                    coordinate_4 = (2, 5)
+                elif shape == 'O':
+                    board.board[0][4] = 1
+                    board.board[0][5] = 1
+                    board.board[1][4] = 1
+                    board.board[1][5] = 1
+                    coordinate_1 = (0, 4)
+                    coordinate_2 = (0, 5)
+                    coordinate_3 = (1, 4)
+                    coordinate_4 = (1, 5)
+                elif shape == 'S':
+                    board.board[0][5] = 1
+                    board.board[0][6] = 1
+                    board.board[1][5] = 1
+                    board.board[1][4] = 1
+                    coordinate_1 = (0, 5)
+                    coordinate_2 = (0, 6)
+                    coordinate_3 = (1, 5)
+                    coordinate_4 = (1, 4)
+                elif shape == 'T':
+                    board.board[0][4] = 1
+                    board.board[0][5] = 1
+                    board.board[0][6] = 1
+                    board.board[1][5] = 1
+                    coordinate_1 = (0, 4)
+                    coordinate_2 = (0, 5)
+                    coordinate_3 = (0, 6)
+                    coordinate_4 = (1, 5)
+                elif shape == 'Z':
+                    board.board[0][4] = 1
+                    board.board[0][5] = 1
+                    board.board[1][5] = 1
+                    board.board[1][6] = 1
+                    coordinate_1 = (0, 4)
+                    coordinate_2 = (0, 5)
+                    coordinate_3 = (1, 5)
+                    coordinate_4 = (1, 6)
     if start_window:
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, (100, 255, 100), (16, 16, 480, 608), width=1)
@@ -145,10 +202,9 @@ while running:
             board.board.append([0] * 10)
             start_of_start_window = False
             PUSH_SHAPE = pygame.USEREVENT + 1
-            pygame.time.set_timer(PUSH_SHAPE, 1500)
+            pygame.time.set_timer(PUSH_SHAPE, 500)
         board.render(screen)
-        if upload_shapes:
-            board.notice(screen)
+        board.notice(screen)
     pygame.display.flip()
     if start_window:
         button_polygon = pygame.draw.polygon(screen, (0, 0, 0), button_polygon)
