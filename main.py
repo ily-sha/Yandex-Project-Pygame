@@ -2,22 +2,47 @@ import pygame
 
 from classes import Board
 
+from functions import get_shape_type
+
 pygame.init()
 size = width, height = 512, 640
 screen = pygame.display.set_mode(size)
 game_window = False
 settings_window = False
 start_window = True
+start_of_start_window = False
+PUSH_SHAPE = None
+shape_is_active = False
+upload_shapes = False
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             if start_window:
                 if button_polygon.collidepoint(event.pos):
                     start_window = False
                     game_window = True
+                    start_of_start_window = True
+        elif event.type == PUSH_SHAPE:
+            if shape_is_active:
+                pass
+            else:
+                shape = get_shape_type()
+                shape = 'I'
+                shape_is_active = True
+                print(shape)
+                if shape == 'I':
+                    board.board[0][4] = 1
+                    board.board[1][4] = 1
+                    board.board[2][4] = 1
+                    board.board[3][4] = 1
+                    coordinate_1 = (0, 4)
+                    coordinate_2 = (1, 4)
+                    coordinate_3 = (2, 4)
+                    coordinate_4 = (3, 4)
+                upload_shapes = True
     if start_window:
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, (100, 255, 100), (16, 16, 480, 608), width=1)
@@ -78,8 +103,6 @@ while running:
         screen.fill((0, 0, 0))
         color = (100, 255, 100)
         pygame.draw.rect(screen, color, (16, 16, 480, 608), width=1)
-        board = Board(10, 20)
-        board.render(screen)
 
         # надпись 'score'
 
@@ -116,6 +139,16 @@ while running:
         font = pygame.font.SysFont('staypixelregular', 29)
         text = font.render('aaaaaa', 0, color, (0, 0, 0))
         screen.blit(text, (296, 507))
+
+        if start_of_start_window:
+            board = Board(10, 20)
+            board.board.append([0] * 10)
+            start_of_start_window = False
+            PUSH_SHAPE = pygame.USEREVENT + 1
+            pygame.time.set_timer(PUSH_SHAPE, 1500)
+        board.render(screen)
+        if upload_shapes:
+            board.notice(screen)
     pygame.display.flip()
     if start_window:
         button_polygon = pygame.draw.polygon(screen, (0, 0, 0), button_polygon)
