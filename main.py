@@ -19,6 +19,7 @@ hotkeys_is_ok = False
 PUSH_SHAPE = None
 PUSH_SHAPE_FAST = None
 shape_is_active = False
+hotkeys_is_no = True
 upload_shapes = False
 play_button_polygon = None
 play_button_polygon_list = list()
@@ -119,6 +120,9 @@ while running:
                     coordinate_2 = (0, 5)
                     coordinate_3 = (1, 5)
                     coordinate_4 = (1, 6)
+            if hotkeys_is_no:
+                hotkeys_is_ok = True
+                hotkeys_is_no = False
         elif event.type == PUSH_SHAPE_FAST:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_s]:
@@ -141,8 +145,7 @@ while running:
         elif event.type == pygame.KEYDOWN and hotkeys_is_ok:
             if event.key == pygame.K_a:
                 data = board.movement_to_left(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
-                movement = data[4]
-                if movement:
+                if data is not None:
                     coordinate_1 = data[0]
                     coordinate_2 = data[1]
                     coordinate_3 = data[2]
@@ -348,7 +351,6 @@ while running:
                 pygame.time.set_timer(PUSH_SHAPE, 500)
             else:
                 pygame.time.set_timer(PUSH_SHAPE, 400)
-            hotkeys_is_ok = True
             start_of_start_window = False
         board.render(screen)
         board.notice(screen)
