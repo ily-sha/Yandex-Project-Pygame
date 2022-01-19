@@ -274,7 +274,7 @@ while running:
         text = font.render('hard', 0, (100, 255, 100), (0, 0, 0))
         screen.blit(text, (350, 533))
 
-        easy_button_rect = pygame.Rect(328, 527, 75, 25)
+        hard_button_rect = pygame.Rect(328, 527, 75, 25)
 
     if game_window:
         screen.fill((0, 0, 0))
