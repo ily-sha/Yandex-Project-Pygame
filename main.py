@@ -20,6 +20,11 @@ PUSH_SHAPE = None
 PUSH_SHAPE_FAST = None
 shape_is_active = False
 upload_shapes = False
+play_button_polygon = None
+play_button_polygon_list = list()
+easy_button_rect = None
+medium_button_rect = None
+hard_button_rect = None
 running = True
 while running:
     for event in pygame.event.get():
@@ -27,10 +32,16 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if start_window:
-                if button_polygon.collidepoint(event.pos):
+                if play_button_polygon.collidepoint(event.pos):
                     start_window = False
                     game_window = True
                     start_of_start_window = True
+                elif easy_button_rect.collidepoint(event.pos):
+                    level = 'easy'
+                elif medium_button_rect.collidepoint(event.pos):
+                    level = 'medium'
+                elif hard_button_rect.collidepoint(event.pos):
+                    level = 'hard'
         elif event.type == PUSH_SHAPE:
             if shape_is_active:
                 stop = board.downward_movement_of_shape(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
@@ -214,14 +225,57 @@ while running:
 
         pygame.draw.rect(screen, color, (207, 401, 98, 7))
 
-        button_polygon = [(221, 306), (221, 313), (214, 313), (214, 320), (207, 320)]
-        button_polygon += [(207, 350), (214, 350), (214, 357), (221, 357), (221, 364)]
-        button_polygon += [(291, 364), (291, 357), (298, 357), (298, 350), (305, 350)]
-        button_polygon += [(305, 320), (298, 320), (298, 313), (291, 313), (291, 306)]
+        play_button_polygon_list = [(221, 306), (221, 313), (214, 313), (214, 320), (207, 320)]
+        play_button_polygon_list += [(207, 350), (214, 350), (214, 357), (221, 357), (221, 364)]
+        play_button_polygon_list += [(291, 364), (291, 357), (298, 357), (298, 350), (305, 350)]
+        play_button_polygon_list += [(305, 320), (298, 320), (298, 313), (291, 313), (291, 306)]
 
         font = pygame.font.SysFont('staypixelregular', 19)
         text = font.render('play!', 0, (100, 255, 100), (0, 0, 0))
         screen.blit(text, (236, 327))
+
+        pygame.draw.rect(screen, color, (108, 527, 75, 25), width=3)
+        pygame.draw.rect(screen, color, (108, 549, 75, 20), width=3)
+        pygame.draw.rect(screen, color, (98, 579, 95, 2))
+        pygame.draw.rect(screen, color, (98, 554, 2, 25))
+        pygame.draw.rect(screen, color, (191, 554, 2, 25))
+        pygame.draw.rect(screen, color, (98, 554, 10, 2))
+        pygame.draw.rect(screen, color, (181, 554, 10, 2))
+
+        font = pygame.font.SysFont('staypixelregular', 17)
+        text = font.render('easy', 0, (100, 255, 100), (0, 0, 0))
+        screen.blit(text, (131, 533))
+
+        easy_button_rect = pygame.Rect(108, 527, 75, 25)
+
+        pygame.draw.rect(screen, color, (218, 527, 75, 25), width=3)
+        pygame.draw.rect(screen, color, (218, 549, 75, 20), width=3)
+        pygame.draw.rect(screen, color, (208, 579, 95, 2))
+        pygame.draw.rect(screen, color, (208, 554, 2, 25))
+        pygame.draw.rect(screen, color, (301, 554, 2, 25))
+        pygame.draw.rect(screen, color, (208, 554, 10, 2))
+        pygame.draw.rect(screen, color, (291, 554, 10, 2))
+
+        font = pygame.font.SysFont('staypixelregular', 17)
+        text = font.render('medium', 0, (100, 255, 100), (0, 0, 0))
+        screen.blit(text, (230, 533))
+
+        medium_button_rect = pygame.Rect(218, 527, 75, 25)
+
+        pygame.draw.rect(screen, color, (328, 527, 75, 25), width=3)
+        pygame.draw.rect(screen, color, (328, 549, 75, 20), width=3)
+        pygame.draw.rect(screen, color, (318, 579, 95, 2))
+        pygame.draw.rect(screen, color, (318, 554, 2, 25))
+        pygame.draw.rect(screen, color, (411, 554, 2, 25))
+        pygame.draw.rect(screen, color, (318, 554, 10, 2))
+        pygame.draw.rect(screen, color, (401, 554, 10, 2))
+
+        font = pygame.font.SysFont('staypixelregular', 17)
+        text = font.render('hard', 0, (100, 255, 100), (0, 0, 0))
+        screen.blit(text, (350, 533))
+
+        easy_button_rect = pygame.Rect(328, 527, 75, 25)
+
     if game_window:
         screen.fill((0, 0, 0))
         color = (100, 255, 100)
@@ -300,6 +354,6 @@ while running:
         board.notice(screen)
     pygame.display.flip()
     if start_window:
-        button_polygon = pygame.draw.polygon(screen, (0, 0, 0), button_polygon)
+        play_button_polygon = pygame.draw.polygon(screen, (0, 0, 0), play_button_polygon_list)
 
 pygame.quit()
