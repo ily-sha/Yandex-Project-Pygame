@@ -235,7 +235,7 @@ while running:
 
         # надпись со значением 'score'
 
-        font = pygame.font.SysFont('staypixelregular', 29)
+        font = pygame.font.SysFont('vcrosdmonorusbyd', 23)
         text = font.render(score, 0, color, (0, 0, 0))
         screen.blit(text, (296, 76))
 
@@ -268,7 +268,7 @@ while running:
             con.commit()
             hi_score = score
 
-        font = pygame.font.SysFont('staypixelregular', 29)
+        font = pygame.font.SysFont('vcrosdmonorusbyd', 23)
         text = font.render(hi_score, 0, color, (0, 0, 0))
         screen.blit(text, (296, 160))
 
