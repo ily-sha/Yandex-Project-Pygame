@@ -12,7 +12,7 @@ screen = pygame.display.set_mode(size)
 game_window = False
 settings_window = False
 start_window = True
-level = 'easy'
+level = 'medium'
 score = '0'
 start_of_start_window = False
 hotkeys_is_ok = False
@@ -119,7 +119,12 @@ while running:
                 if stop:
                     shape_is_active = False
                     pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
-                pygame.time.set_timer(PUSH_SHAPE, 500)
+                if level == 'easy':
+                    pygame.time.set_timer(PUSH_SHAPE, 600)
+                elif level == 'medium':
+                    pygame.time.set_timer(PUSH_SHAPE, 500)
+                else:
+                    pygame.time.set_timer(PUSH_SHAPE, 400)
             else:
                 pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
         elif event.type == pygame.KEYDOWN and hotkeys_is_ok:
@@ -147,10 +152,20 @@ while running:
                 coordinate_4 = (coordinate_4[0] + 1, coordinate_4[1])
                 if stop:
                     shape_is_active = False
-                    pygame.time.set_timer(PUSH_SHAPE, 500)
+                    if level == 'easy':
+                        pygame.time.set_timer(PUSH_SHAPE, 600)
+                    elif level == 'medium':
+                        pygame.time.set_timer(PUSH_SHAPE, 500)
+                    else:
+                        pygame.time.set_timer(PUSH_SHAPE, 400)
                 else:
                     pygame.time.set_timer(PUSH_SHAPE_FAST, 150)
-                    pygame.time.set_timer(PUSH_SHAPE, 500)
+                    if level == 'easy':
+                        pygame.time.set_timer(PUSH_SHAPE, 600)
+                    elif level == 'medium':
+                        pygame.time.set_timer(PUSH_SHAPE, 500)
+                    else:
+                        pygame.time.set_timer(PUSH_SHAPE, 400)
     if start_window:
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, (100, 255, 100), (16, 16, 480, 608), width=1)
@@ -234,7 +249,24 @@ while running:
 
         con = sqlite3.connect('hi-scores.db')
         cur = con.cursor()
-        hi_score = str(cur.execute('SELECT easy FROM hi_scores').fetchone()[0])
+        if level == 'easy':
+            hi_score = str(cur.execute('SELECT easy FROM hi_scores').fetchone()[0])
+        elif level == 'medium':
+            hi_score = str(cur.execute('SELECT medium FROM hi_scores').fetchone()[0])
+        else:
+            hi_score = str(cur.execute('SELECT hard FROM hi_scores').fetchone()[0])
+        if int(score) > int(hi_score):
+            if level == 'easy':
+                cur.execute('''UPDATE hi_scores
+                               SET easy = ?''', (int(score),))
+            elif level == 'medium':
+                cur.execute('''UPDATE hi_scores
+                               SET medium = ?''', (int(score),))
+            else:
+                cur.execute('''UPDATE hi_scores
+                               SET hard = ?''', (int(score),))
+            con.commit()
+            hi_score = score
 
         font = pygame.font.SysFont('staypixelregular', 29)
         text = font.render(hi_score, 0, color, (0, 0, 0))
@@ -256,7 +288,12 @@ while running:
             board = Board(10, 20)
             board.board.append([0] * 10)
             PUSH_SHAPE = pygame.USEREVENT + 1
-            pygame.time.set_timer(PUSH_SHAPE, 500)
+            if level == 'easy':
+                pygame.time.set_timer(PUSH_SHAPE, 600)
+            elif level == 'medium':
+                pygame.time.set_timer(PUSH_SHAPE, 500)
+            else:
+                pygame.time.set_timer(PUSH_SHAPE, 400)
             hotkeys_is_ok = True
             start_of_start_window = False
         board.render(screen)
