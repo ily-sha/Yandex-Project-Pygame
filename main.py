@@ -6,6 +6,8 @@ from classes import Board
 
 from functions import get_shape_type
 
+import sprites
+
 pygame.init()
 size = width, height = 512, 640
 screen = pygame.display.set_mode(size)
@@ -14,13 +16,20 @@ settings_window = False
 start_window = True
 level = 'hard'
 score = '0'
+bang_start = None
+clock = pygame.time.Clock()
+fps = 40
 start_of_start_window = False
+display_bangs = False
+numbers_of_deleted_rows = None
+number_of_bangs = None
 hotkeys_is_ok = False
 play_button_is_pressed = False
 wait_press_play_button = False
 HOLD_PLAY_BUTTON = None
 PUSH_SHAPE = None
 PUSH_SHAPE_FAST = None
+DELETE_ROWS = None
 shape_is_active = False
 hotkeys_is_no = True
 upload_shapes = False
@@ -58,7 +67,7 @@ while running:
                 else:
                     play_button_is_pressed = False
                     wait_press_play_button = False
-                    pygame.time.set_timer(HOLD_PLAY_BUTTON, 250)
+                    pygame.time.set_timer(HOLD_PLAY_BUTTON, 375)
         elif event.type == PUSH_SHAPE:
             if shape_is_active:
                 stop = board.downward_movement_of_shape(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
@@ -68,9 +77,14 @@ while running:
                 coordinate_4 = (coordinate_4[0] + 1, coordinate_4[1])
                 if stop:
                     shape_is_active = False
+                    numbers_of_deleted_rows = board.mark_deleted_rows()
+                    if len(numbers_of_deleted_rows) != 0:
+                        DELETE_ROWS = pygame.USEREVENT + 4
+                        pygame.time.set_timer(DELETE_ROWS, 375)
+                        display_bangs = True
+                        bang_start = True
+                        number_of_bangs = 20
             else:
-                plus_score = board.delete_row()
-                score = str(int(score) + plus_score)
                 shape = get_shape_type()
                 shape_is_active = True
                 if shape == 'I':
@@ -150,6 +164,13 @@ while running:
                 if stop:
                     shape_is_active = False
                     pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
+                    numbers_of_deleted_rows = board.mark_deleted_rows()
+                    if len(numbers_of_deleted_rows) != 0:
+                        DELETE_ROWS = pygame.USEREVENT + 4
+                        pygame.time.set_timer(DELETE_ROWS, 25)
+                        display_bangs = True
+                        bang_start = True
+                        number_of_bangs = 20
                 if level == 'easy':
                     pygame.time.set_timer(PUSH_SHAPE, 600)
                 elif level == 'medium':
@@ -158,6 +179,10 @@ while running:
                     pygame.time.set_timer(PUSH_SHAPE, 400)
             else:
                 pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
+        elif event.type == DELETE_ROWS:
+            plus_score = board.delete_row()
+            score = str(int(score) + plus_score)
+            pygame.time.set_timer(DELETE_ROWS, 0)
         elif event.type == pygame.KEYDOWN and hotkeys_is_ok:
             if event.key == pygame.K_a:
                 data = board.movement_to_left(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
@@ -467,8 +492,30 @@ while running:
             start_of_start_window = False
         board.render(screen)
         board.notice(screen)
+        if display_bangs:
+            if number_of_bangs >= 1:
+                if bang_start:
+                    for i in numbers_of_deleted_rows:
+                        y = 19 + (i - 1) * 25
+                        for j in range(10):
+                            x = 19 + j * 25
+                            sprites.Bang(x, y)
+                    bang_start = False
+                    number_of_bangs -= 1
+                else:
+                    sprites.bangs.update()
+                    number_of_bangs -= 1
+                sprites.bangs.draw(screen)
+            else:
+                for item in sprites.bangs:
+                    item.kill()
+                display_bangs = False
+                number_of_bangs = None
+                bang_start = None
+                numbers_of_deleted_rows = None
     pygame.display.flip()
     if start_window:
         play_button_polygon = pygame.draw.polygon(screen, (0, 0, 0), play_button_polygon_list)
+    clock.tick(fps)
 
 pygame.quit()
