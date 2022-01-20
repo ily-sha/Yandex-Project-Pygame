@@ -479,6 +479,18 @@ while running:
         text = font.render(level, 0, color, (0, 0, 0))
         screen.blit(text, (296, 507))
 
+        font = pygame.font.SysFont('staypixelregular', 37)
+        text = font.render('wow, you', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 263))
+
+        font = pygame.font.SysFont('staypixelregular', 37)
+        text = font.render('have a new', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 308))
+
+        font = pygame.font.SysFont('staypixelregular', 37)
+        text = font.render('hi-score!!!', 0, color, (0, 0, 0))
+        screen.blit(text, (296, 353))
+
         if start_of_start_window:
             board = Board(10, 20)
             board.board.append([0] * 10)
