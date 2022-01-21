@@ -8,13 +8,16 @@ from functions import get_shape_type
 
 import sprites
 
+from pympler import muppy
+
+all_objects = muppy.get_objects()
+
 pygame.init()
 size = width, height = 512, 640
 screen = pygame.display.set_mode(size)
 game_window = False
-settings_window = False
 start_window = True
-level = 'hard'
+level = 'easy'
 score = '0'
 bang_start = None
 clock = pygame.time.Clock()
@@ -25,9 +28,14 @@ numbers_of_deleted_rows = None
 note_about_deleted_rows = 0
 number_of_bangs = None
 hotkeys_is_ok = False
+push_shape_fast_event_use = False
+delete_rows_event_use = False
+end_of_game = False
+hi_score_changed = False
 play_button_is_pressed = False
 wait_press_play_button = False
 HOLD_PLAY_BUTTON = None
+END_OF_GAME = None
 PUSH_SHAPE = None
 PUSH_SHAPE_FAST = None
 DELETE_ROWS = None
@@ -44,6 +52,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == END_OF_GAME:
+            pygame.time.set_timer(PUSH_SHAPE, 0)
+            if push_shape_fast_event_use:
+                pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
+            if delete_rows_event_use:
+                pygame.time.set_timer(DELETE_ROWS, 0)
+            pygame.time.set_timer(END_OF_GAME, 0)
+            hotkeys_is_ok = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if start_window:
                 if play_button_polygon.collidepoint(event.pos):
@@ -82,6 +98,7 @@ while running:
                     if len(numbers_of_deleted_rows) != 0:
                         DELETE_ROWS = pygame.USEREVENT + 4
                         pygame.time.set_timer(DELETE_ROWS, 375)
+                        delete_rows_event_use = True
                         display_bangs = True
                         bang_start = True
                         number_of_bangs = 20
@@ -166,10 +183,12 @@ while running:
                 if stop:
                     shape_is_active = False
                     pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
+                    push_shape_fast_event_use = False
                     numbers_of_deleted_rows = board.mark_deleted_rows()
                     if len(numbers_of_deleted_rows) != 0:
                         DELETE_ROWS = pygame.USEREVENT + 4
-                        pygame.time.set_timer(DELETE_ROWS, 25)
+                        pygame.time.set_timer(DELETE_ROWS, 375)
+                        delete_rows_event_use = True
                         display_bangs = True
                         bang_start = True
                         number_of_bangs = 20
@@ -209,10 +228,12 @@ while running:
                         pygame.time.set_timer(PUSH_SHAPE, 400)
             else:
                 pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
+                push_shape_fast_event_use = False
         elif event.type == DELETE_ROWS:
             plus_score = board.delete_row()
             score = str(int(score) + plus_score)
             pygame.time.set_timer(DELETE_ROWS, 0)
+            delete_rows_event_use = False
         elif event.type == pygame.KEYDOWN and hotkeys_is_ok:
             if event.key == pygame.K_a:
                 data = board.movement_to_left(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
@@ -230,6 +251,7 @@ while running:
                     coordinate_4 = data[3]
             elif event.key == pygame.K_s:
                 PUSH_SHAPE_FAST = pygame.USEREVENT + 3
+                push_shape_fast_event_use = True
                 stop = board.downward_movement_of_shape(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
                 coordinate_1 = (coordinate_1[0] + 1, coordinate_1[1])
                 coordinate_2 = (coordinate_2[0] + 1, coordinate_2[1])
@@ -545,6 +567,7 @@ while running:
                 cur.execute('''UPDATE hi_scores
                                SET hard = ?''', (int(score),))
             con.commit()
+            hi_score_changed = True
             hi_score = score
 
         font = pygame.font.SysFont('vcrosdmonorusbyd', 23)
@@ -563,17 +586,40 @@ while running:
         text = font.render(level, 0, color, (0, 0, 0))
         screen.blit(text, (296, 507))
 
-        font = pygame.font.SysFont('staypixelregular', 37)
-        text = font.render('wow, you', 0, color, (0, 0, 0))
-        screen.blit(text, (296, 263))
+        if hi_score_changed and not end_of_game:
 
-        font = pygame.font.SysFont('staypixelregular', 37)
-        text = font.render('have a new', 0, color, (0, 0, 0))
-        screen.blit(text, (296, 308))
+            font = pygame.font.SysFont('staypixelregular', 37)
+            text = font.render('wow, you', 0, color, (0, 0, 0))
+            screen.blit(text, (296, 263))
 
-        font = pygame.font.SysFont('staypixelregular', 37)
-        text = font.render('hi-score!!!', 0, color, (0, 0, 0))
-        screen.blit(text, (296, 353))
+            font = pygame.font.SysFont('staypixelregular', 37)
+            text = font.render('have a new', 0, color, (0, 0, 0))
+            screen.blit(text, (296, 308))
+
+            font = pygame.font.SysFont('staypixelregular', 37)
+            text = font.render('hi-score!!!', 0, color, (0, 0, 0))
+            screen.blit(text, (296, 353))
+
+        if end_of_game:
+            font = pygame.font.SysFont('staypixelregular', 37)
+            text = font.render('ooh, you', 0, color, (0, 0, 0))
+            screen.blit(text, (296, 284))
+
+            font = pygame.font.SysFont('staypixelregular', 37)
+            text = font.render('have lost...', 0, color, (0, 0, 0))
+            screen.blit(text, (296, 329))
+
+            pygame.draw.rect(screen, color, (108, 546, 75, 25), width=3)
+            pygame.draw.rect(screen, color, (108, 568, 75, 20), width=3)
+            pygame.draw.rect(screen, color, (98, 598, 95, 2))
+            pygame.draw.rect(screen, color, (98, 573, 2, 25))
+            pygame.draw.rect(screen, color, (191, 573, 2, 25))
+            pygame.draw.rect(screen, color, (98, 573, 10, 2))
+            pygame.draw.rect(screen, color, (181, 573, 10, 2))
+
+            font = pygame.font.SysFont('staypixelregular', 17)
+            text = font.render('easy', 0, (100, 255, 100), (0, 0, 0))
+            screen.blit(text, (131, 552))
 
         if start_of_start_window:
             board = Board(10, 20)
@@ -609,6 +655,10 @@ while running:
                 number_of_bangs = None
                 bang_start = None
                 numbers_of_deleted_rows = None
+        if board.end_of_game_checking():
+            end_of_game = True
+            END_OF_GAME = pygame.USEREVENT + 5
+            pygame.time.set_timer(END_OF_GAME, 1)
     pygame.display.flip()
     if start_window:
         play_button_polygon = pygame.draw.polygon(screen, (0, 0, 0), play_button_polygon_list)
