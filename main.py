@@ -34,6 +34,7 @@ end_of_game = False
 hi_score_changed = False
 play_button_is_pressed = False
 wait_press_play_button = False
+without_mooving = False
 HOLD_PLAY_BUTTON = None
 END_OF_GAME = None
 PUSH_SHAPE = None
@@ -271,21 +272,21 @@ while running:
             pygame.time.set_timer(DELETE_ROWS, 0)
             delete_rows_event_use = False
         elif event.type == pygame.KEYDOWN and hotkeys_is_ok:
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_a and shape_is_active:
                 data = board.movement_to_left(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
                 if data is not None:
                     coordinate_1 = data[0]
                     coordinate_2 = data[1]
                     coordinate_3 = data[2]
                     coordinate_4 = data[3]
-            elif event.key == pygame.K_d:
+            elif event.key == pygame.K_d and shape_is_active:
                 data = board.movement_to_right(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
                 if data is not None:
                     coordinate_1 = data[0]
                     coordinate_2 = data[1]
                     coordinate_3 = data[2]
                     coordinate_4 = data[3]
-            elif event.key == pygame.K_s:
+            elif event.key == pygame.K_s and shape_is_active:
                 PUSH_SHAPE_FAST = pygame.USEREVENT + 3
                 push_shape_fast_event_use = True
                 stop = board.downward_movement_of_shape(coordinate_1, coordinate_2, coordinate_3, coordinate_4, shape)
