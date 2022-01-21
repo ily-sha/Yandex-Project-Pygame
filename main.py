@@ -44,6 +44,7 @@ hotkeys_is_no = True
 upload_shapes = False
 play_button_polygon = None
 play_button_polygon_list = list()
+restart_button_rect = None
 easy_button_rect = None
 medium_button_rect = None
 hard_button_rect = None
@@ -73,6 +74,41 @@ while running:
                     level = 'medium'
                 elif hard_button_rect.collidepoint(event.pos):
                     level = 'hard'
+            if game_window:
+                if end_of_game and restart_button_rect.collidepoint(event.pos):
+                    game_window = False
+                    start_window = True
+                    level = 'easy'
+                    score = '0'
+                    bang_start = None
+                    clock = pygame.time.Clock()
+                    fps = 40
+                    start_of_start_window = False
+                    display_bangs = False
+                    numbers_of_deleted_rows = None
+                    note_about_deleted_rows = 0
+                    number_of_bangs = None
+                    hotkeys_is_ok = False
+                    push_shape_fast_event_use = False
+                    delete_rows_event_use = False
+                    end_of_game = False
+                    hi_score_changed = False
+                    play_button_is_pressed = False
+                    wait_press_play_button = False
+                    HOLD_PLAY_BUTTON = None
+                    END_OF_GAME = None
+                    PUSH_SHAPE = None
+                    PUSH_SHAPE_FAST = None
+                    DELETE_ROWS = None
+                    shape_is_active = False
+                    hotkeys_is_no = True
+                    upload_shapes = False
+                    play_button_polygon = None
+                    play_button_polygon_list = list()
+                    restart_button_rect = None
+                    easy_button_rect = None
+                    medium_button_rect = None
+                    hard_button_rect = None
         elif event.type == HOLD_PLAY_BUTTON:
             if not pygame.mouse.get_pressed()[0]:
                 if not wait_press_play_button:
@@ -567,6 +603,7 @@ while running:
                 cur.execute('''UPDATE hi_scores
                                SET hard = ?''', (int(score),))
             con.commit()
+            con.close()
             hi_score_changed = True
             hi_score = score
 
@@ -605,21 +642,23 @@ while running:
             text = font.render('ooh, you', 0, color, (0, 0, 0))
             screen.blit(text, (296, 284))
 
-            font = pygame.font.SysFont('staypixelregular', 37)
+            font = pygame.font.SysFont('stayp ixelregular', 37)
             text = font.render('have lost...', 0, color, (0, 0, 0))
             screen.blit(text, (296, 329))
 
-            pygame.draw.rect(screen, color, (108, 546, 75, 25), width=3)
-            pygame.draw.rect(screen, color, (108, 568, 75, 20), width=3)
-            pygame.draw.rect(screen, color, (98, 598, 95, 2))
-            pygame.draw.rect(screen, color, (98, 573, 2, 25))
-            pygame.draw.rect(screen, color, (191, 573, 2, 25))
-            pygame.draw.rect(screen, color, (98, 573, 10, 2))
-            pygame.draw.rect(screen, color, (181, 573, 10, 2))
+            pygame.draw.rect(screen, color, (41, 550, 75, 25), width=3)
+            pygame.draw.rect(screen, color, (41, 572, 75, 20), width=3)
+            pygame.draw.rect(screen, color, (31, 602, 95, 2))
+            pygame.draw.rect(screen, color, (31, 577, 2, 25))
+            pygame.draw.rect(screen, color, (124, 577, 2, 25))
+            pygame.draw.rect(screen, color, (31, 577, 10, 2))
+            pygame.draw.rect(screen, color, (114, 577, 10, 2))
 
             font = pygame.font.SysFont('staypixelregular', 17)
-            text = font.render('easy', 0, (100, 255, 100), (0, 0, 0))
-            screen.blit(text, (131, 552))
+            text = font.render('restart', 0, (100, 255, 100), (0, 0, 0))
+            screen.blit(text, (52, 556))
+
+            restart_button_rect = pygame.Rect(41, 550, 75, 25)
 
         if start_of_start_window:
             board = Board(10, 20)
