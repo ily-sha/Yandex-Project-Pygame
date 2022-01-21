@@ -22,6 +22,7 @@ fps = 40
 start_of_start_window = False
 display_bangs = False
 numbers_of_deleted_rows = None
+note_about_deleted_rows = 0
 number_of_bangs = None
 hotkeys_is_ok = False
 play_button_is_pressed = False
@@ -84,6 +85,7 @@ while running:
                         display_bangs = True
                         bang_start = True
                         number_of_bangs = 20
+                        note_about_deleted_rows += len(numbers_of_deleted_rows)
             else:
                 shape = get_shape_type()
                 shape_is_active = True
@@ -171,12 +173,40 @@ while running:
                         display_bangs = True
                         bang_start = True
                         number_of_bangs = 20
+                        note_about_deleted_rows += len(numbers_of_deleted_rows)
                 if level == 'easy':
-                    pygame.time.set_timer(PUSH_SHAPE, 600)
+                    if note_about_deleted_rows > 11:
+                        pygame.time.set_timer(PUSH_SHAPE, 200)
+                    elif note_about_deleted_rows > 9:
+                        pygame.time.set_timer(PUSH_SHAPE, 250)
+                    elif note_about_deleted_rows > 7:
+                        pygame.time.set_timer(PUSH_SHAPE, 350)
+                    elif note_about_deleted_rows > 5:
+                        pygame.time.set_timer(PUSH_SHAPE, 450)
+                    elif note_about_deleted_rows > 3:
+                        pygame.time.set_timer(PUSH_SHAPE, 550)
+                    else:
+                        pygame.time.set_timer(PUSH_SHAPE, 600)
                 elif level == 'medium':
-                    pygame.time.set_timer(PUSH_SHAPE, 500)
+                    if note_about_deleted_rows > 10:
+                        pygame.time.set_timer(PUSH_SHAPE, 200)
+                    elif note_about_deleted_rows > 7:
+                        pygame.time.set_timer(PUSH_SHAPE, 250)
+                    elif note_about_deleted_rows > 4:
+                        pygame.time.set_timer(PUSH_SHAPE, 350)
+                    elif note_about_deleted_rows > 2:
+                        pygame.time.set_timer(PUSH_SHAPE, 450)
+                    else:
+                        pygame.time.set_timer(PUSH_SHAPE, 500)
                 else:
-                    pygame.time.set_timer(PUSH_SHAPE, 400)
+                    if note_about_deleted_rows > 8:
+                        pygame.time.set_timer(PUSH_SHAPE, 200)
+                    elif note_about_deleted_rows > 5:
+                        pygame.time.set_timer(PUSH_SHAPE, 250)
+                    elif note_about_deleted_rows > 2:
+                        pygame.time.set_timer(PUSH_SHAPE, 350)
+                    else:
+                        pygame.time.set_timer(PUSH_SHAPE, 400)
             else:
                 pygame.time.set_timer(PUSH_SHAPE_FAST, 0)
         elif event.type == DELETE_ROWS:
@@ -208,19 +238,73 @@ while running:
                 if stop:
                     shape_is_active = False
                     if level == 'easy':
-                        pygame.time.set_timer(PUSH_SHAPE, 600)
+                        if note_about_deleted_rows > 11:
+                            pygame.time.set_timer(PUSH_SHAPE, 200)
+                        elif note_about_deleted_rows > 9:
+                            pygame.time.set_timer(PUSH_SHAPE, 250)
+                        elif note_about_deleted_rows > 7:
+                            pygame.time.set_timer(PUSH_SHAPE, 350)
+                        elif note_about_deleted_rows > 5:
+                            pygame.time.set_timer(PUSH_SHAPE, 450)
+                        elif note_about_deleted_rows > 3:
+                            pygame.time.set_timer(PUSH_SHAPE, 550)
+                        else:
+                            pygame.time.set_timer(PUSH_SHAPE, 600)
                     elif level == 'medium':
-                        pygame.time.set_timer(PUSH_SHAPE, 500)
+                        if note_about_deleted_rows > 10:
+                            pygame.time.set_timer(PUSH_SHAPE, 200)
+                        elif note_about_deleted_rows > 7:
+                            pygame.time.set_timer(PUSH_SHAPE, 250)
+                        elif note_about_deleted_rows > 4:
+                            pygame.time.set_timer(PUSH_SHAPE, 350)
+                        elif note_about_deleted_rows > 2:
+                            pygame.time.set_timer(PUSH_SHAPE, 450)
+                        else:
+                            pygame.time.set_timer(PUSH_SHAPE, 500)
                     else:
-                        pygame.time.set_timer(PUSH_SHAPE, 400)
+                        if note_about_deleted_rows > 8:
+                            pygame.time.set_timer(PUSH_SHAPE, 200)
+                        elif note_about_deleted_rows > 5:
+                            pygame.time.set_timer(PUSH_SHAPE, 250)
+                        elif note_about_deleted_rows > 2:
+                            pygame.time.set_timer(PUSH_SHAPE, 350)
+                        else:
+                            pygame.time.set_timer(PUSH_SHAPE, 400)
                 else:
                     pygame.time.set_timer(PUSH_SHAPE_FAST, 150)
                     if level == 'easy':
-                        pygame.time.set_timer(PUSH_SHAPE, 600)
+                        if note_about_deleted_rows > 11:
+                            pygame.time.set_timer(PUSH_SHAPE, 200)
+                        elif note_about_deleted_rows > 9:
+                            pygame.time.set_timer(PUSH_SHAPE, 250)
+                        elif note_about_deleted_rows > 7:
+                            pygame.time.set_timer(PUSH_SHAPE, 350)
+                        elif note_about_deleted_rows > 5:
+                            pygame.time.set_timer(PUSH_SHAPE, 450)
+                        elif note_about_deleted_rows > 3:
+                            pygame.time.set_timer(PUSH_SHAPE, 550)
+                        else:
+                            pygame.time.set_timer(PUSH_SHAPE, 600)
                     elif level == 'medium':
-                        pygame.time.set_timer(PUSH_SHAPE, 500)
+                        if note_about_deleted_rows > 10:
+                            pygame.time.set_timer(PUSH_SHAPE, 200)
+                        elif note_about_deleted_rows > 7:
+                            pygame.time.set_timer(PUSH_SHAPE, 250)
+                        elif note_about_deleted_rows > 4:
+                            pygame.time.set_timer(PUSH_SHAPE, 350)
+                        elif note_about_deleted_rows > 2:
+                            pygame.time.set_timer(PUSH_SHAPE, 450)
+                        else:
+                            pygame.time.set_timer(PUSH_SHAPE, 500)
                     else:
-                        pygame.time.set_timer(PUSH_SHAPE, 400)
+                        if note_about_deleted_rows > 8:
+                            pygame.time.set_timer(PUSH_SHAPE, 200)
+                        elif note_about_deleted_rows > 5:
+                            pygame.time.set_timer(PUSH_SHAPE, 250)
+                        elif note_about_deleted_rows > 2:
+                            pygame.time.set_timer(PUSH_SHAPE, 350)
+                        else:
+                            pygame.time.set_timer(PUSH_SHAPE, 400)
     if start_window:
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, (100, 255, 100), (16, 16, 480, 608), width=1)
