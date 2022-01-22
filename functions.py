@@ -1,5 +1,6 @@
 import random
 
+
 def get_shape_type(restart=False):
     shapes = ['I', 'J', 'L', 'O', 'S', 'T', 'Z']
     shapes_queue = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'] * 5
