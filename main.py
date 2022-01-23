@@ -16,8 +16,8 @@ pygame.init()
 size = width, height = 512, 640
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Tetris')
-icon = pygame.image.load('data/T.jpg')
-pygame.display.set_icon(icon)
+# icon = pygame.image.load('data/T.jpg')
+# pygame.display.set_icon(icon)
 game_window = False
 start_window = True
 level = 'easy'
